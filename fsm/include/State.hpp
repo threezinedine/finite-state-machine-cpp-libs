@@ -19,6 +19,7 @@ class State
 
         void OnRun();
         void OnEntry();
+        void OnExit();
         RegisterResult RegisterState(State* state);
         bool CheckExists(State* state) const;
         RegisterResult RegisterTransition(Transition transition);
@@ -37,6 +38,7 @@ class State
         const std::string& name_;
         std::function<void()> onRun_;
         std::function<void()> onEntry_;
+        std::function<void()> onExit_;
         State* currentState_ = nullptr;
         State* defaultState_ = nullptr;
         std::map<std::string, std::vector<Transition>> transitions_;

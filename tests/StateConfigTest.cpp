@@ -68,6 +68,18 @@ TEST_F(StateConfigTest, RunOnExit)
 {
     State state(GET_STATE_NAME(state), GET_ON_RUN_FUNC(state), 
                     GET_ON_ENTRY_FUNC(state), GET_ON_EXIT_FUNC(state));
+
+    state.OnExit();
+
+    EXPECT_EQ(GET_ON_EXIT_CALLED_TIMES_VARIABLE(state), 1);
+}
+
+TEST_F(StateConfigTest, RunOnExitWithoutOnExit)
+{
+    State state(GET_STATE_NAME(state), GET_ON_RUN_FUNC(state), 
+                    GET_ON_ENTRY_FUNC(state));
+
+    EXPECT_NO_THROW(state.OnExit());
 }
 
 TEST_F(StateConfigTest, RunOnEntryWithNullOnEntry)
@@ -247,7 +259,7 @@ TEST_F(StateConfigTest, runOnEntryWithConfigDefaultState)
     EXPECT_EQ(state->GetCurrentState(), firstChildState);
 }
 
-TEST_F(StateConfigTest, runOnEntryWithoutDfeaultState)
+TEST_F(StateConfigTest, runOnEntryWithoutDefaultState)
 {
     secondChildState->OnEntry();
 

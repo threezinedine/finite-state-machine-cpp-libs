@@ -8,26 +8,26 @@
 
 
 State::State(const std::string& name)
-    : name_(name), onRun_(nullptr), onEntry_(nullptr)
+    : name_(name), onRun_(nullptr), onEntry_(nullptr), onExit_(nullptr)
 {
 
 } 
 
 State::State(const std::string& name, std::function<void()> onRun)
-    : name_(name), onRun_(onRun), onEntry_(nullptr)
+    : name_(name), onRun_(onRun), onEntry_(nullptr), onExit_(nullptr)
 {
 
 } 
 
 State::State(const std::string& name, std::function<void()> onRun, std::function<void()> onEntry)
-    : name_(name), onRun_(onRun), onEntry_(onEntry)
+    : name_(name), onRun_(onRun), onEntry_(onEntry), onExit_(nullptr)
 {
 
 } 
 
 State::State(const std::string& name, std::function<void()> onRun, 
                     std::function<void()> onEntry, std::function<void()> onExit)
-    : name_(name), onRun_(onRun), onEntry_(onEntry)
+    : name_(name), onRun_(onRun), onEntry_(onEntry), onExit_(onExit)
 {
 
 }
@@ -53,6 +53,7 @@ void State::OnRun()
         {
             if (transition.triggerFunc())
             {
+                currentState_->OnExit();
                 currentState_ = transition.toState;
                 currentState_->OnEntry();
             }
@@ -72,6 +73,19 @@ void State::OnEntry()
     if (currentState_ != nullptr)
     {
         currentState_->OnEntry();
+    }
+}
+
+void State::OnExit()
+{
+    if (onExit_ != nullptr)
+    {
+        onExit_(); 
+    }
+
+    if (currentState_ != nullptr)
+    {
+        currentState_->OnExit();
     }
 }
 

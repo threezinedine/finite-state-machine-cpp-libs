@@ -86,6 +86,7 @@ TEST_F(StateOperationTest, testRunAndATriggerRises)
     EXPECT_THAT(GET_ON_RUN_CALLED_TIMES_VARIALBE(firstChildState), ::testing::Le(2));
     EXPECT_THAT(GET_ON_RUN_CALLED_TIMES_VARIALBE(secondChildState), ::testing::Ge(1));
     EXPECT_THAT(GET_ON_ENTRY_CALLED_TIMES_VARIABLE(secondChildState), ::testing::Ge(1));
+    EXPECT_THAT(GET_ON_EXIT_CALLED_TIMES_VARIABLE(firstChildState), ::testing::Eq(1));
 }
 
 
@@ -110,6 +111,7 @@ TEST_F(StateOperationTest, transitionToAnotherState)
     EXPECT_EQ(state->GetCurrentState(), firstChildState);
     EXPECT_EQ(state->GetCurrentState()->GetCurrentState(), secondChildFirstChildState);
     EXPECT_THAT(GET_ON_RUN_CALLED_TIMES_VARIALBE(firstChildFirstChildState), ::testing::Le(2));
+    EXPECT_THAT(GET_ON_EXIT_CALLED_TIMES_VARIABLE(firstChildFirstChildState), ::testing::Eq(1));
     EXPECT_THAT(GET_ON_RUN_CALLED_TIMES_VARIALBE(secondChildFirstChildState), ::testing::Ge(2));
 }
 
@@ -128,6 +130,8 @@ TEST_F(StateOperationTest, transitionToAnotherStateInHigherLevel)
 
     EXPECT_EQ(state->GetCurrentState(), secondChildState);
     EXPECT_EQ(state->GetCurrentState()->GetCurrentState(), nullptr);
+    EXPECT_THAT(GET_ON_EXIT_CALLED_TIMES_VARIABLE(firstChildFirstChildState), ::testing::Eq(1));
+    EXPECT_THAT(GET_ON_EXIT_CALLED_TIMES_VARIABLE(secondChildFirstChildState), ::testing::Eq(1));
 }
 
 TEST_F(StateOperationTest, transitionToAnotherStateInHigherLevelAndReturnBack)
